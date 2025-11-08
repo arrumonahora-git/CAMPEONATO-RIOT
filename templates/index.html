@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerenciador de Torneio LoL</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Gerenciador de Torneio LoL</h1>
+        <h2>Torneio Atual: {{ torneio.nome }}</h2>
+
+        <div class="section">
+            <h3>Gerenciar Torneio</h3>
+            <form action="/criar-torneio" method="post" onsubmit="return handleFormSubmit(this, 'torneio-msg');">
+                <input type="text" name="nome" placeholder="Novo nome do torneio" required>
+                <button type="submit" class="btn btn-danger">Resetar/Criar Torneio</button>
+            </form>
+            <div id="torneio-msg" class="message"></div>
+        </div>
+
+        <div class="section">
+            <h3>Inscrição de Jogadores</h3>
+            <form action="/adicionar-jogador" method="post" onsubmit="return handleFormSubmit(this, 'jogador-msg');">
+                <input type="text" name="nome_jogador" placeholder="Nome do Jogador" required>
+                <input type="email" name="email" placeholder="Email para pagamento" required>
+                <input type="number" name="valor" placeholder="Valor da inscrição (ex: 50.0)" step="0.01" required>
+                <button type="submit" class="btn btn-primary">Adicionar e Pagar (PIX)</button>
+            </form>
+            <div id="jogador-msg" class="message"></div>
+            <h4>Jogadores Inscritos ({{ torneio.jogadores | length }})</h4>
+            <ul>
+                {% for jogador in torneio.jogadores %}
+                <li>{{ jogador }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3>Partidas e Resultados</h3>
+            <form action="/gerar-chaveamento" method="post" onsubmit="return handleFormSubmit(this, 'chaveamento-msg');">
+                <button type="submit" class="btn btn-primary">Gerar Próxima Rodada</button>
+            </form>
+            <div id="chaveamento-msg" class="message"></div>
+            <h4>Partidas Atuais (Rodada {{ torneio.rodada_atual }})</h4>
+            <ul class="match-list">
+                {% for partida in torneio.partidas %}
+                <li><span class="player1">{{ partida.jogador1 }}</span> vs <span class="player2">{{ partida.jogador2 }}</span></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3>Registrar Vencedor</h3>
+            <form action="/registrar-vencedor" method="post" onsubmit="return handleFormSubmit(this, 'vencedor-msg');">
+                <input type="text" name="vencedor" placeholder="Nome do vencedor" required>
+                <input type="number" name="premio" placeholder="Prêmio da partida (ex: 100.0)" step="0.01" required>
+                <button type="submit" class="btn btn-success">Registrar Vencedor</button>
+            </form>
+            <div id="vencedor-msg" class="message"></div>
+        </div>
+
+        <div class="section">
+            <h3>Ranking de Prêmios</h3>
+            <ul class="prize-list">
+                {% for jogador, premio in torneio.premios.items() %}
+                <li>{{ jogador }}: <span class="prize-amount">R${{ "%.2f" | format(premio) }}</span></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        async function handleFormSubmit(form, messageElementId) {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            const messageDiv = document.getElementById(messageElementId);
+            messageDiv.className = 'message'; // Reseta classes
+            messageDiv.innerHTML = result.mensagem || result.message;
+            messageDiv.classList.add(result.status === 'sucesso' ? 'success' : 'error');
+            
+            if (result.status === 'sucesso') {
+                // Atualiza a página após sucesso (exceto no caso de pagamento, para mostrar o QR Code)
+                if (form.action !== '/adicionar-jogador') {
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                }
+            }
+
+            // Lógica de exibição do QR Code
+            if (result.id && result.point_of_interaction && result.point_of_interaction.transaction_data && result.point_of_interaction.transaction_data.qr_code_base64) {
+                messageDiv.innerHTML += `<br>ID do Pagamento: ${result.id}`;
+                messageDiv.innerHTML += `<div class="qr-code-box"><br>QR Code PIX:<br><img src="data:image/png;base64,${result.point_of_interaction.transaction_data.qr_code_base64}" alt="QR Code"></div>`;
+            }
+
+            return false;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #06067f; /* Fundo escuro */
+    color: #e4e4e4; /* Texto claro */
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 850px;
+    margin: 30px auto;
+    background: #232946; /* Container mais escuro */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+h1, h2, h3 {
+    color: #b8c4f0; /* Azul claro */
+    border-bottom: 2px solid #4d4e8c;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+}
+
+.section {
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid #3e436f;
+    border-radius: 8px;
+    background-color: #2b3252;
+}
+
+/* Botões */
+.btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-primary { 
+    background-color: #4d4e8c; 
+}
+.btn-primary:hover { 
+    background-color: #6969a6; 
+}
+
+.btn-success { 
+    background-color: #28a745; 
+}
+.btn-success:hover { 
+    background-color: #218838; 
+}
+
+.btn-danger { 
+    background-color: #dc3545; 
+}
+.btn-danger:hover { 
+    background-color: #c82333; 
+}
+
+/* Formulários */
+input[type="text"], input[type="email"], input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #4d4e8c;
+    border-radius: 4px;
+    background-color: #3e436f;
+    color: #e4e4e4;
+}
+
+/* Listas */
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+li {
+    background: #3e436f;
+    margin-top: 5px;
+    padding: 8px 15px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.match-list li {
+    font-weight: bold;
+}
+.match-list .player1 {
+    color: #f7a239; /* Cor de time 1 */
+}
+.match-list .player2 {
+    color: #4dc4f7; /* Cor de time 2 */
+}
+
+.prize-amount {
+    font-weight: bold;
+    color: #28a745;
+}
+
+/* Mensagens de feedback */
+.message {
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+
+.qr-code-box {
+    text-align: center;
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    color: #333;
+}
+
+.qr-code-box img {
+    width: 150px;
+    height: 150px;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+}

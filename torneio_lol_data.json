@@ -1,0 +1,11 @@
+{
+    "nome": "LOL",
+    "jogadores": [
+        "edu"
+    ],
+    "partidas": [],
+    "premios": {
+        "edu": 0
+    },
+    "rodada_atual": 0
+}
